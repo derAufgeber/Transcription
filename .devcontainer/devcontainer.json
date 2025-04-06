@@ -1,11 +1,11 @@
 {
     "name": "analysis_comp",
     "build": {
-        "dockerfile": "/media/hendrik/data/workspace_2/sp_an/.devcontainer/Dockerfile",
-        "context": "/media/hendrik/data/workspace_2/sp_an/"
+        "dockerfile": "/media/hendrik/data/workspace_2/Transcription/.devcontainer/Dockerfile",
+        "context": "/media/hendrik/data/workspace_2/Transcription/"
     },
     "workspaceFolder": "/workspace",
-    "workspaceMount": "source=/media/hendrik/data/workspace_2/sp_an,target=/workspace,type=bind,consistency=cached",
+    "workspaceMount": "source=/media/hendrik/data/workspace_2/Transcription,target=/workspace,type=bind,consistency=cached",
     "privileged": true,
     "features": {
         "ghcr.io/devcontainers/features/sshd:1": {},
