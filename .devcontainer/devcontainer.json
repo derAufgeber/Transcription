@@ -1,0 +1,28 @@
+{
+    "name": "analysis_comp",
+    "build": {
+        "dockerfile": "/media/hendrik/data/workspace_2/sp_an/.devcontainer/Dockerfile",
+        "context": "/media/hendrik/data/workspace_2/sp_an/"
+    },
+    "workspaceFolder": "/workspace",
+    "workspaceMount": "source=/media/hendrik/data/workspace_2/sp_an,target=/workspace,type=bind,consistency=cached",
+    "privileged": true,
+    "features": {
+        "ghcr.io/devcontainers/features/sshd:1": {},
+        "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
+    },
+    "containerEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}",
+        "QT_X11_NO_MITSHM": "1"
+    },
+    "runArgs": [
+        "--privileged",
+        "--device-cgroup-rule=c 189:* rmw",
+        "--runtime",
+        "nvidia"
+    ],
+    "mounts": [
+        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached"
+    ],
+    "postCreateCommand": "pip install notebook jupyter_contrib_nbextensions && jupyter contrib nbextension install --user"
+}
