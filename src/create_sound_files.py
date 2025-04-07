@@ -6,6 +6,8 @@ os.environ["PATH"] += os.pathsep + "/opt/homebrew/bin"
 from midiutil import MIDIFile
 from midi2audio import FluidSynth
 from pydub import AudioSegment
+from itertools import product
+
 def createMidi(notes, pathlocal="/Users/lucasschneider/Desktop/Privat/Transcription_Project/Transcription/"):
     #create folder name
     base_folder='output'
@@ -60,7 +62,9 @@ def createMidi(notes, pathlocal="/Users/lucasschneider/Desktop/Privat/Transcript
     file_path2 = os.path.join(folder_name, 'notes.npy')    
     np.save(file_path2,np.repeat(notes, samplerate))
 
-            
-createMidi([60,65])
-createMidi([61,64])
-createMidi([58,72])
+if __name__ == "__main__":
+    pathlocal = "/usr/share/sounds/sf2/FluidR3_GM.sf2"
+    pairs = list(product(range(10, 101), repeat=2))
+    for pair in pairs: 
+        print(pair)
+        createMidi(pair, pathlocal=pathlocal)
