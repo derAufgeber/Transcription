@@ -1,4 +1,10 @@
 import os
+import soundfile as sf
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.signal import spectrogram
+from scipy.sparse import load_npz
+
 def spectrogramOfTestData(nbinsX,start_time=0,end_time=2,folder_name_input="output/folder_1/",folder_name_output=("example_data/")):
     # Load the audio file
     audio_data, sample_rate = sf.read(os.path.join(folder_name_input, "melody_trimmed.wav"))
@@ -49,15 +55,15 @@ def spectrogramOfTestData(nbinsX,start_time=0,end_time=2,folder_name_input="outp
 
 spectrogramOfTestData(nbinsX=5500)
 
+if __name__ == "__main__":
 
-from scipy.sparse import load_npz
+    piano_roll = load_npz(os.path.join("example_data2/wav_output/", "piano_roll_sparse.npz"))
 
-piano_roll = load_npz(os.path.join("example_data2/wav_output/", "piano_roll_sparse.npz"))
-dense_piano_roll = piano_roll.toarray()
+    # Get coordinates of non-zero elements
+    rows, cols = piano_roll.nonzero()
 
-plt.figure(figsize=(20, 6))
-plt.pcolormesh(dense_piano_roll[1000000:1400000].T,cmap='gray')
-plt.xlabel("Time")
-plt.ylabel("MIDI number")
-plt.colorbar(label="probability")
-plt.show()
+    plt.figure(figsize=(6, 6))
+    plt.scatter(cols, rows, s=1, color='black')  # s controls point size
+    plt.xlabel("Time")
+    plt.ylabel("MIDI number")
+    plt.show()
