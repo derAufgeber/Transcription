@@ -5,13 +5,17 @@ import pretty_midi
 import numpy as np
 import scipy.sparse as sp
 from pydub import AudioSegment
-
+from midiutil import MIDIFile
+from pydub import AudioSegment
+from scipy.io import wavfile
+import soundfile as sf
+from scipy.signal import spectrogram
 
 def process_midi(mid_path, output_dir, soundfont_path, samplerate=44000):
     os.makedirs(output_dir, exist_ok=True)
     wav_filename = os.path.join(output_dir, "output.wav")
     # npy_filename = os.path.join(output_dir, "piano_roll.npy")
-    
+
     # Convert MIDI to WAV using FluidSynth
     fs = FluidSynth(sound_font=soundfont_path, sample_rate=samplerate)
     fs.midi_to_audio(mid_path, wav_filename)
@@ -34,7 +38,21 @@ def process_midi(mid_path, output_dir, soundfont_path, samplerate=44000):
         audio = audio[:expected_duration_ms]
         audio.export(wav_filename, format="wav")
     
-    # Save the piano roll numpy file
+    # load wav file and compute spectrogram (time resolved FFT)
+    audio_data, sample_rate = sf.read(os.path.join(output_dir, "output.wav"))
+    f, t, Sxx = spectrogram(audio_data[:,0], fs=samplerate, nperseg=1024)
+    Sxx = np.where(Sxx <= 1e-13, 1e-13, Sxx)  # Replace zeros with a small value
+    np.save(os.path.join(output_dir,"Spectrogram.npy"),Sxx)
+    # Optional: plot Spectrogram
+    # plt.figure(figsize=(12, 6))
+    # plt.pcolormesh(t, f, 10 * np.log10(Sxx))  # Convert power to dB
+    # plt.title("Spectrogram")
+    # plt.xlabel("Time [s]")
+    # plt.ylabel("Frequency [Hz]")
+    # plt.colorbar(label="Power [dB]")
+    # plt.ylim(0, 8000)  # Optional: limit frequency range to 10 kHz
+    # plt.show()
+    # # Save the piano roll numpy file
     # np.save(npy_filename, piano_roll_binary)
     print(f"WAV and NumPy files saved to {output_dir}")
 
